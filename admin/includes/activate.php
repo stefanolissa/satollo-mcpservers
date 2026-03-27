@@ -46,6 +46,6 @@ if ($wpdb->last_error) {
 }
 
 // Cleanup process
-//if (!wp_next_scheduled('satollo_mcp_clean_logs') && (!defined('WP_INSTALLING') || !WP_INSTALLING)) {
-//    wp_schedule_event(time() + 30, 'daily', 'satollo_mcp_clean_logs');
-//}
+if (!wp_next_scheduled('satollo_mcp_clean_logs') && (!defined('WP_INSTALLING') || !WP_INSTALLING)) {
+    wp_schedule_event(time() + 30, 'daily', 'satollo_mcp_clean_logs');
+}

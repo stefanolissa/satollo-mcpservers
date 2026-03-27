@@ -95,3 +95,14 @@ if (is_admin()) {
 if (is_admin() || defined('DOING_CRON') && DOING_CRON) {
     require_once __DIR__ . '/includes/repo.php';
 }
+
+// Daily cleanup process
+add_action('satollo_mcp_clean_logs', 'satollo_mcp_clean_logs');
+
+function satollo_mcp_clean_logs() {
+    global $wpdb;
+    $settings = get_option('satollo-mcp');
+    $days = (int) ($settings['log_days'] ?? 30);
+    $days = max($days, 1);
+    $wpdb->query($wpdb->prepare("delete from `{$wpdb->prefix}satollo_mcp_logs` where created < date_sub(now(), interval %d day)", $days));
+}
