@@ -1,10 +1,10 @@
 {
-    "name": "vendor/newsletter-mcp",
-    "description": "Description of project newsletter-mcp.",
+    "name": "vendor/satollo-mcp",
+    "description": "MCP server for WordPress",
     "authors": [
         {
             "name": "Stefano",
-            "email": "your@email.here"
+            "email": "stefano@satollo.net"
         }
     ],
     "require": {
@@ -15,6 +15,7 @@
     "config": {
         "allow-plugins": {
             "automattic/jetpack-autoloader": true
-        }
+        },
+        "optimize-autoloader": true
     }
 }

@@ -15,6 +15,8 @@ $sql = "CREATE TABLE `" . $wpdb->prefix . "satollo_mcp_servers` (
             `created` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
             `status` int NOT NULL DEFAULT 0,
             `name` varchar(200) NOT NULL DEFAULT '',
+            `route` varchar(50) NOT NULL DEFAULT '',
+            `namespace` varchar(50) NOT NULL DEFAULT '',
             `description` varchar(500) NOT NULL DEFAULT '',
             `categories` varchar(1000) NOT NULL DEFAULT '',
             PRIMARY KEY (`id`)

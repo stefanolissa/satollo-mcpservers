@@ -19,7 +19,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
         $row['name'] = wp_strip_all_tags($data['name']) ?: 'Server';
         $row['description'] = wp_kses_post($data['description']);
-        $row['categories'] = implode(',', $data['categories']);
+        $row['categories'] = implode(',', $data['categories'] ?? []);
+        $row['route'] = sanitize_key($data['route'] ?? '');
+        $row['namespace'] = sanitize_key($data['namespace'] ?? '');
 
         $wpdb->update($wpdb->prefix . 'satollo_mcp_servers', $row, ['id' => $server['id']]);
         if (WP_DEBUG && $wpdb->last_error) {

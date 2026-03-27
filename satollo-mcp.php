@@ -1,22 +1,23 @@
 <?php
 
 /*
-  Plugin Name: Satollo MCP
+  Plugin Name: Satollo MCP Servers
   Plugin URI: https://www.satollo.net/plugins/mcp
   Description: MCP servers using the WP abilties
   Text Domain: satollo-mcp
   Domain Path: /languages
-  Version: 0.0.1
+  Version: 0.0.4
   Requires PHP: 8.1
   Requires at least: 6.1
-  Author: The Newsletter Team
+  Author: Stefano Lissa
   Author URI: https://www.satollo.net
   Disclaimer: Use at your own risk. No warranty expressed or implied is provided.
+  Update URI: satollo-mcp
  */
 
 defined('ABSPATH') || exit;
 
-define('SATOLLO_MCP_VERSION', '0.0.1');
+define('SATOLLO_MCP_VERSION', '0.0.4');
 
 add_action('init', function () {
     require_once __DIR__ . '/vendor/autoload_packages.php';
@@ -30,7 +31,7 @@ add_action('mcp_adapter_init', function ($adapter) {
     $abilities = wp_get_abilities();
 
     // Load all defined MCP servers
-   $servers = $wpdb->get_results("select * from {$wpdb->prefix}satollo_mcp_servers");
+    $servers = $wpdb->get_results("select * from {$wpdb->prefix}satollo_mcp_servers");
 
     foreach ($servers as $server) {
 
@@ -52,7 +53,7 @@ add_action('mcp_adapter_init', function ($adapter) {
         }
 
         $route = $server->route ?: 'mcp-' . $server->id;
-        $namespace = $server->namespace ?? 'mcps';
+        $namespace = $server->namespace ?: 'mcps';
 
         /** @var WP\MCP\Core\McpAdapter $adapter */
         $r = $adapter->create_server(
@@ -88,6 +89,6 @@ if (is_admin()) {
     require_once __DIR__ . '/admin/admin.php';
 }
 
-//if (is_admin() || defined('DOING_CRON') && DOING_CRON) {
-//    require_once __DIR__ . '/includes/repo.php';
-//}
+if (is_admin() || defined('DOING_CRON') && DOING_CRON) {
+    require_once __DIR__ . '/includes/repo.php';
+}
