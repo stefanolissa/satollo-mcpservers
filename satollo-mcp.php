@@ -34,6 +34,7 @@ add_action('mcp_adapter_init', function ($adapter) {
 
     // Load all defined MCP servers
     $servers = $wpdb->get_results("select * from {$wpdb->prefix}satollo_mcp_servers");
+    $settings = get_option('satollo_mcp_settings', []);
 
     foreach ($servers as $server) {
 
@@ -69,7 +70,7 @@ add_action('mcp_adapter_init', function ($adapter) {
                     \WP\MCP\Transport\HttpTransport::class, // Recommended: MCP 2025-06-18 compliant
                 ],
                 \WP\MCP\Infrastructure\ErrorHandling\ErrorLogMcpErrorHandler::class, // Error handler
-                SatolloMcpObservabilityHandler::class,
+                ($settings['logging'] ?? false) ? SatolloMcpObservabilityHandler::class : \WP\MCP\Infrastructure\Observability\NullMcpObservabilityHandler::class,
                 //WP_DEBUG ? \WP\MCP\Infrastructure\Observability\ErrorLogMcpObservabilityHandler::class : \WP\MCP\Infrastructure\Observability\NullMcpObservabilityHandler::class, // Observability handler
                 $ability_names, // Abilities to expose as tools
                 [], // Resources (optional)

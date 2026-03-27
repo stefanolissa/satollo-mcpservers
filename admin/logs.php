@@ -65,7 +65,8 @@ class Logs_List_Table extends WP_List_Table {
             case 'server_id':
                 return esc_html($item->server_id);
             case 'session_id':
-                return esc_html($item->session_id);
+                $color = substr($item->session_id, 1, 5);
+                return '<span style="color: #0' . esc_attr($color) . ';">' . esc_html($item->session_id) . '</span>';
             case 'client_name':
                 return esc_html($item->client_name);
             case 'method':
@@ -84,11 +85,17 @@ class Logs_List_Table extends WP_List_Table {
 $table = new Logs_List_Table();
 $table->prepare_items();
 add_thickbox();
+
+$settings = get_option('satollo_mcp_settings', []);
 ?>
 <?php include __DIR__ . '/menu.php'; ?>
 <div class="wrap">
-    <?php include __DIR__ . '/nav.php'; ?>
-
+    <?php if (!isset($settings['logging'])) { ?>
+        <div class="satollo-notice satollo-notice-warning">
+            Logging is not active, see the settings page.
+        </div>
+    <?php } ?>
+    
     <form method="post">
         <?php wp_nonce_field('satollo-mcp-action'); ?>
         <button name="clear" class="button button-secondary"><?php esc_html_e('Clear', 'satollo-mcp'); ?></button>

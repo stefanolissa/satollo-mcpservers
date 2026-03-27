@@ -17,6 +17,11 @@ class SatolloMcpObservabilityHandler implements \WP\MCP\Infrastructure\Observabi
         global $wpdb;
 
         static $error_log_handler = null;
+        static $settings = null;
+
+        if (is_null($settings)) {
+            $settings = get_option('satollo_mcp_settings', []);
+        }
 
         if ($event === 'mcp.request') {
             $session_id = $tags['session_id'] ?? '';
@@ -26,12 +31,15 @@ class SatolloMcpObservabilityHandler implements \WP\MCP\Infrastructure\Observabi
             $wpdb->insert($wpdb->prefix . 'satollo_mcp_logs',
                     ['event' => $event, 'server_id' => $tags['server_id'] ?? '',
                         'method' => $tags['method'] ?? '',
-                        'session_id' => $tags['session_id'] ?? '',
+                        'session_id' => $session_id,
                         'client_name' => $tags['params']['client_name'] ?? '',
             ]);
+            if (WP_DEBUG && $wpdb->last_error) {
+                error_log($wpdb->last_error);
+            }
         }
 
-        if (WP_DEBUG) {
+        if ($settings['debug'] ?? false) {
             if (!$error_log_handler) {
                 $error_log_handler = new \WP\MCP\Infrastructure\Observability\ErrorLogMcpObservabilityHandler();
             }
