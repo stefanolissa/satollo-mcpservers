@@ -4,7 +4,7 @@ defined('ABSPATH') || exit;
 /** @var wpdb $wpdb */
 global $wpdb;
 
-if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+if (($_SERVER['REQUEST_METHOD'] ?? '') === 'POST') {
     check_admin_referer('satollo-mcp-action');
 
     if (isset($_POST['add'])) {

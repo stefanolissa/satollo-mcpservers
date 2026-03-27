@@ -10,6 +10,7 @@ defined('ABSPATH') || exit;
             <li><a href="?page=satollo-mcp&subpage=index">Home</a></li>
             <li><a href="?page=satollo-mcp&subpage=list">Servers</a></li>
             <li><a href="?page=satollo-mcp&subpage=settings">Settings</a></li>
+            <li><a href="?page=satollo-mcp&subpage=logs">Logs</a></li>
         </ul>
     </div>
 

@@ -28,6 +28,23 @@ if ($wpdb->last_error) {
     error_log('Satollo MCP > ' . $wpdb->last_error);
 }
 
+$sql = "CREATE TABLE `" . $wpdb->prefix . "satollo_mcp_logs` (
+            `id` int(11) NOT NULL AUTO_INCREMENT,
+            `created` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+            `event` varchar(100) NOT NULL DEFAULT '',
+            `server_id` varchar(100) NOT NULL DEFAULT '',
+            `method` varchar(100) NOT NULL DEFAULT '',
+            `client_name` varchar(100) NOT NULL DEFAULT '',
+            `session_id` varchar(100) NOT NULL DEFAULT '',
+            PRIMARY KEY (`id`)
+            ) $charset_collate;";
+
+dbDelta($sql);
+
+if ($wpdb->last_error) {
+    error_log('Satollo MCP > ' . $wpdb->last_error);
+}
+
 // Cleanup process
 //if (!wp_next_scheduled('satollo_mcp_clean_logs') && (!defined('WP_INSTALLING') || !WP_INSTALLING)) {
 //    wp_schedule_event(time() + 30, 'daily', 'satollo_mcp_clean_logs');

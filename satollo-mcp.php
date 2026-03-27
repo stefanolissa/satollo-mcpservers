@@ -4,20 +4,20 @@
   Plugin Name: Satollo MCP Servers
   Plugin URI: https://www.satollo.net/plugins/mcp
   Description: MCP servers using the WP abilties
-  Text Domain: satollo-mcp
-  Domain Path: /languages
-  Version: 0.0.4
+  Version: 0.0.5
   Requires PHP: 8.1
-  Requires at least: 6.1
+  Requires at least: 6.9
   Author: Stefano Lissa
   Author URI: https://www.satollo.net
+  License: GPLv2 or later
+  License URI: https://www.gnu.org/licenses/gpl-2.0.html
   Disclaimer: Use at your own risk. No warranty expressed or implied is provided.
   Update URI: satollo-mcp
  */
 
 defined('ABSPATH') || exit;
 
-define('SATOLLO_MCP_VERSION', '0.0.4');
+define('SATOLLO_MCP_VERSION', '0.0.5');
 
 add_action('init', function () {
     require_once __DIR__ . '/vendor/autoload_packages.php';
@@ -26,6 +26,8 @@ add_action('init', function () {
 
 add_action('mcp_adapter_init', function ($adapter) {
     global $wpdb;
+
+    require_once __DIR__ . '/includes/observer.php';
 
     // All available abilities
     $abilities = wp_get_abilities();
@@ -67,7 +69,8 @@ add_action('mcp_adapter_init', function ($adapter) {
                     \WP\MCP\Transport\HttpTransport::class, // Recommended: MCP 2025-06-18 compliant
                 ],
                 \WP\MCP\Infrastructure\ErrorHandling\ErrorLogMcpErrorHandler::class, // Error handler
-                WP_DEBUG ? \WP\MCP\Infrastructure\Observability\ErrorLogMcpObservabilityHandler::class : \WP\MCP\Infrastructure\Observability\NullMcpObservabilityHandler::class, // Observability handler
+                SatolloMcpObservabilityHandler::class,
+                //WP_DEBUG ? \WP\MCP\Infrastructure\Observability\ErrorLogMcpObservabilityHandler::class : \WP\MCP\Infrastructure\Observability\NullMcpObservabilityHandler::class, // Observability handler
                 $ability_names, // Abilities to expose as tools
                 [], // Resources (optional)
                 [], // Prompts (optional)

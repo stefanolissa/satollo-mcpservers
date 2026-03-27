@@ -1,5 +1,8 @@
 # Changelog
 
+## 0.0.5
+- Added logging
+
 ## 0.0.4
 - Work in progress
 

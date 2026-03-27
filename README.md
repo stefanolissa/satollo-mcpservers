@@ -17,9 +17,13 @@ WordPress 6.9.
 
 Installation instructions [available here](https://www.satollo.net/plugins/mcp).
 
-## Monitor
+## Monitor plugin
 
 To show a list of the available abilities, dump the input and output schema, log the executions
 I adapted the plugin [Monitor](https://www.satollo.net/plugins/monitor).
 
+## Assistant plugin
+
+Add AI assistant both on the admin side and the frontend side selecting the abilities you
+want to be expose. [Assistant](https://www.satollo.net/plugins/assistant).
 

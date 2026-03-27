@@ -8,6 +8,7 @@ if (SATOLLO_MCP_VERSION !== $version) {
     update_option('satollo_mcp_version', SATOLLO_MCP_VERSION, false);
 }
 
+// @phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Not relevant here
 if (isset($_GET['page']) && $_GET['page'] === 'satollo-mcp') {
     add_action('admin_enqueue_scripts', function ($hook) {
         wp_enqueue_style('satollo-mcp', plugin_dir_url(__FILE__) . '/assets/admin.css', [], SATOLLO_MCP_VERSION);
@@ -19,7 +20,7 @@ add_action('admin_menu', function () {
     add_options_page(
             'MCP', 'MCP', 'administrator', 'satollo-mcp',
             function () {
-                $subpage = $_GET['subpage'] ?? '';
+                $subpage = sanitize_key($_GET['subpage'] ?? '');
                 switch ($subpage) {
                     case 'settings':
                         include __DIR__ . '/settings.php';
@@ -29,6 +30,9 @@ add_action('admin_menu', function () {
                         break;
                     case 'list-edit':
                         include __DIR__ . '/edit.php';
+                        break;
+                    case 'logs':
+                        include __DIR__ . '/logs.php';
                         break;
                     default:
                         include __DIR__ . '/index.php';

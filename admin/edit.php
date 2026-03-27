@@ -4,18 +4,17 @@ defined('ABSPATH') || exit;
 /** @var wpdb $wpdb */
 global $wpdb;
 
-$server = $wpdb->get_row($wpdb->prepare("select * from {$wpdb->prefix}satollo_mcp_servers where id=%d limit 1", (int) $_GET['id']), ARRAY_A);
+$server_id = (int) $_GET['id'] ?? 0;
+$server = $wpdb->get_row($wpdb->prepare("select * from {$wpdb->prefix}satollo_mcp_servers where id=%d limit 1", $server_id), ARRAY_A);
 if (!$server) {
     die('Invalid ID');
 }
 
-if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+if (($_SERVER['REQUEST_METHOD'] ?? '') === 'POST') {
     check_admin_referer('satollo-mcp-action');
 
     if (isset($_POST['save'])) {
-        $data = wp_unslash($_POST['data']);
-
-        $data['categories'] = $data['categories'] ?? [];
+        $data = wp_unslash($_POST['data'] ?? []);
 
         $row['name'] = wp_strip_all_tags($data['name']) ?: 'Server';
         $row['description'] = wp_kses_post($data['description']);
@@ -25,7 +24,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
         $wpdb->update($wpdb->prefix . 'satollo_mcp_servers', $row, ['id' => $server['id']]);
         if (WP_DEBUG && $wpdb->last_error) {
-            die($wpdb->last_error);
+            die(esc_html($wpdb->last_error));
         }
     }
 } else {
@@ -52,7 +51,7 @@ $categories = wp_get_ability_categories();
                         Name
                     </th>
                     <td>
-                        <input type="text" name="data[name]" size="40" value="<?= esc_attr($data['name'] ?? ''); ?>" placeholder="">
+                        <input type="text" name="data[name]" size="40" value="<?php echo esc_attr($data['name'] ?? ''); ?>" placeholder="">
                         <p class="description"></p>
                     </td>
 
