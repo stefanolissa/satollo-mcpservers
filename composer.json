@@ -1,0 +1,20 @@
+{
+    "name": "vendor/newsletter-mcp",
+    "description": "Description of project newsletter-mcp.",
+    "authors": [
+        {
+            "name": "Stefano",
+            "email": "your@email.here"
+        }
+    ],
+    "require": {
+        "wordpress/mcp-adapter": "v0.4.*",
+        "automattic/jetpack-autoloader": "v5.0.*"
+    },
+
+    "config": {
+        "allow-plugins": {
+            "automattic/jetpack-autoloader": true
+        }
+    }
+}

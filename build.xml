@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<project name="plugin" default="package">
+
+    <target name="package">
+
+        <basename property="dir" file="${project.basedir}"/>
+        <echo>Basedir: ${dir}</echo>
+
+        <property name="basename" value="mcp"/>
+        <property name="slug" value="satollo-${basename}"/>
+        <echo>Slug: ${slug}</echo>
+
+        <loadfile property="plugin" file="satollo-${basename}.php"/>
+
+        <propertyregex pattern="Version: ([^\s]+)" match="$1" property="version" subject="${plugin}"/>
+        <echo>Version: ${version}</echo>
+
+        <echo file="../plugin.json">{ "version": "${version}" }</echo>
+
+        <property name="zipfile" value="../${basename}.zip"/>
+        <property name="zipfileversion" value="../${basename}-${version}.zip"/>
+        <delete file="${zipfile}"/>
+        <zip destfile="${zipfile}">
+            <fileset dir="..">
+                <include name="${dir}/**"/>
+                <exclude name="${dir}/.git/**" />
+                <exclude name="${dir}/.gitignore" />
+                <exclude name="${dir}/nbproject/**" />
+                <exclude name="${dir}/build.xml" />
+                <exclude name="${dir}/phpstan.*" />
+                <exclude name="${dir}/includes/block-jsons/**" />
+            </fileset>
+        </zip>
+
+        <delete file="${zipfileversion}"/>
+        <copy file="${zipfile}" tofile="${zipfileversion}" />
+
+
+    </target>
+
+    <target name="publish" depends="package">
+        <exec executable="scp" outputProperty="result">
+            <arg value="-i"/>
+            <arg value="C:/Users/satol/id_rsa-satollo"/>
+            <arg file="${zipfile}"/>
+            <arg file="${zipfileversion}"/>
+            <arg file="../plugin.json"/>
+            <arg file="CHANGELOG.md"/>
+            <arg file="README.md"/>
+            <arg value="root@www.satollo.net:/var/www/www.satollo.net/repo/${basename}"/>
+        </exec>
+
+        <echo>${result}</echo>
+    </target>
+
+        <target name="update-newsletter">
+        <copy todir="../../wordpress-test/wp-content/plugins/satollo-${basename}" overwrite="true">
+            <fileset dir=".">
+                <include name="**/*.*" />
+            </fileset>
+        </copy>
+    </target>
+</project>

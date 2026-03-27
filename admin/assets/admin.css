@@ -1,0 +1,57 @@
+/* NOTICES */
+.satollo-notice {
+    background-color: white;
+    padding: 0;
+    border: 1px solid #ddd;
+    padding: 1rem;
+    margin-bottom: 1rem;
+}
+
+.satollo-notice.satollo-notice-success {
+    border-left: 3px solid green;
+}
+
+.satollo-notice.satollo-notice-warning {
+    border-left: 3px solid orange;
+}
+
+.satollo-notice.satollo-notice-error {
+    border-left: 3px solid red;
+}
+
+/* TOP MENU */
+
+#satollo-menu {
+    margin-left: -20px;
+    background-color: #3B2D9B;
+    padding: 1rem 20px;
+    display: flex;
+    xjustify-content: space-between;
+    align-items: center;
+}
+
+#satollo-menu-title {
+    font-size: 1.2rem;
+    color: white;
+    margin-right: 2rem;
+}
+
+#satollo-menu-nav ul {
+    margin: 0;
+}
+
+#satollo-menu-nav li {
+    display: inline-block;
+    margin: 0 1rem 0 0;
+}
+
+#satollo-menu-nav a {
+    color: white;
+    text-decoration: none;
+    border-bottom: 3px solid transparent;
+}
+
+#satollo-menu-nav a.satollo-active {
+    border-bottom-color: white;
+}
+
