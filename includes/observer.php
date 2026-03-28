@@ -1,6 +1,10 @@
 <?php
 
-class SatolloMcpObservabilityHandler implements \WP\MCP\Infrastructure\Observability\Contracts\McpObservabilityHandlerInterface {
+namespace Satollo\McpServers;
+
+defined('ABSPATH') || exit;
+
+class McpObservabilityHandler implements \WP\MCP\Infrastructure\Observability\Contracts\McpObservabilityHandlerInterface {
 
     /**
      * Emit a countable event for tracking with optional timing data.
@@ -17,18 +21,15 @@ class SatolloMcpObservabilityHandler implements \WP\MCP\Infrastructure\Observabi
         global $wpdb;
 
         static $error_log_handler = null;
-        static $settings = null;
 
-        if (is_null($settings)) {
-            $settings = get_option('satollo_mcp_settings', []);
-        }
+        $settings = Plugin::get_settings();
 
         if ($event === 'mcp.request') {
             $session_id = $tags['session_id'] ?? '';
             if (!$session_id) {
                 $session_id = $tags['new_session_id'] ?? '';
             }
-            $wpdb->insert($wpdb->prefix . 'satollo_mcp_logs',
+            $wpdb->insert($wpdb->prefix . 'mcpservers_logs',
                     ['event' => $event, 'server_id' => $tags['server_id'] ?? '',
                         'method' => $tags['method'] ?? '',
                         'session_id' => $session_id,
@@ -39,7 +40,7 @@ class SatolloMcpObservabilityHandler implements \WP\MCP\Infrastructure\Observabi
             }
         }
 
-        if ($settings['debug'] ?? false) {
+        if ($settings->debug ?? false) {
             if (!$error_log_handler) {
                 $error_log_handler = new \WP\MCP\Infrastructure\Observability\ErrorLogMcpObservabilityHandler();
             }

@@ -1,31 +1,37 @@
 <?php
+
+namespace Satollo\McpServers;
+
 defined('ABSPATH') || exit;
+
+// phpcs:disable WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedVariableFound -- We are inside a function here
 
 /** @var wpdb $wpdb */
 global $wpdb;
 
-$server_id = (int) $_GET['id'] ?? 0;
-$server = $wpdb->get_row($wpdb->prepare("select * from {$wpdb->prefix}satollo_mcp_servers where id=%d limit 1", $server_id), ARRAY_A);
+$get = wp_unslash($_GET);
+
+$server = $wpdb->get_row($wpdb->prepare("select * from {$wpdb->prefix}mcpservers_servers where id=%d limit 1", $get['id']), ARRAY_A);
 if (!$server) {
     die('Invalid ID');
 }
 
-if (($_SERVER['REQUEST_METHOD'] ?? '') === 'POST') {
-    check_admin_referer('satollo-mcp-action');
+$post = wp_unslash($_POST);
 
-    if (isset($_POST['save'])) {
-        $data = wp_unslash($_POST['data'] ?? []);
+if (isset($post['save'])) {
+    check_admin_referer(Admin::$nonce_action);
 
-        $row['name'] = wp_strip_all_tags($data['name']) ?: 'Server';
-        $row['description'] = wp_kses_post($data['description']);
-        $row['categories'] = implode(',', $data['categories'] ?? []);
-        $row['route'] = sanitize_key($data['route'] ?? '');
-        $row['namespace'] = sanitize_key($data['namespace'] ?? '');
+    $data = $post['data'] ?? [];
 
-        $wpdb->update($wpdb->prefix . 'satollo_mcp_servers', $row, ['id' => $server['id']]);
-        if (WP_DEBUG && $wpdb->last_error) {
-            die(esc_html($wpdb->last_error));
-        }
+    $row['name'] = wp_strip_all_tags($data['name']) ?: 'Server';
+    $row['description'] = wp_kses_post($data['description']);
+    $row['categories'] = implode(',', $data['categories'] ?? []);
+    $row['route'] = sanitize_key($data['route'] ?? '');
+    $row['namespace'] = sanitize_key($data['namespace'] ?? '');
+
+    $wpdb->update($wpdb->prefix . 'mcpservers_servers', $row, ['id' => $server['id']]);
+    if (WP_DEBUG && $wpdb->last_error) {
+        die(esc_html($wpdb->last_error));
     }
 } else {
     $data = $server;
@@ -34,21 +40,20 @@ if (($_SERVER['REQUEST_METHOD'] ?? '') === 'POST') {
 
 $categories = wp_get_ability_categories();
 ?>
-<?php include __DIR__ . '/menu.php'; ?>
+<?php include __DIR__ . '/../menu.php'; ?>
 <div class="wrap">
     <div class="satollo-notice satollo-notice-warning">
-        Warning: abilities are provided by third parties and they are responsible for permission check.
+        <?php esc_html_e('Warning: abilities are provided by third parties and they are responsible for permission check.', 'satollo-mcpservers'); ?>
+
     </div>
 
     <form method="post">
-        <?php wp_nonce_field('satollo-mcp-action'); ?>
+        <?php wp_nonce_field(Admin::$nonce_action); ?>
         <table class="form-table">
-
             <tbody>
-
                 <tr>
                     <th>
-                        Name
+                        <?php esc_html_e('Name', 'satollo-mcpservers'); ?>
                     </th>
                     <td>
                         <input type="text" name="data[name]" size="40" value="<?php echo esc_attr($data['name'] ?? ''); ?>" placeholder="">
@@ -58,7 +63,7 @@ $categories = wp_get_ability_categories();
                 </tr>
                 <tr>
                     <th>
-                        Description
+                        <?php esc_html_e('Description', 'satollo-mcpservers'); ?>
                     </th>
                     <td>
                         <textarea name="data[description]" cols="40" placeholder=""><?php echo esc_html($data['description']); ?></textarea>
@@ -69,7 +74,7 @@ $categories = wp_get_ability_categories();
             </tbody>
         </table>
 
-        <h3>Expose those abilitiy categories</h3>
+        <h3><?php esc_html_e('Abilities to expose', 'satollo-mcpservers'); ?></h3>
 
         <?php foreach ($categories as $category) { ?>
             <label>
@@ -81,6 +86,6 @@ $categories = wp_get_ability_categories();
             <br>
         <?php } ?>
 
-        <p><button name="save" class="button button-primary">Save</button></p>
+        <p><button name="save" class="button button-primary"><?php esc_html_e('Save', 'satollo-mcpservers'); ?></button></p>
     </form>
 </div>

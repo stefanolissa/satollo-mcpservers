@@ -1,4 +1,7 @@
 <?php
+
+namespace Satollo\McpServers;
+
 defined('ABSPATH') || exit;
 
 ?>

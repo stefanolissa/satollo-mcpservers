@@ -1,6 +1,6 @@
-# MCP by Satollo
+# MCP Servers by Satollo
 
-Create an public MCP servers.
+Create and publish MCP servers.
 
 ## Disclaimer
 

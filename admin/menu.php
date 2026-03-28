@@ -1,16 +1,17 @@
 <?php
-defined('ABSPATH') || exit;
+namespace Satollo\McpServers;
 
+defined('ABSPATH') || exit;
 ?>
 
 <div id="satollo-menu">
     <div id="satollo-menu-title">MCP</div>
     <div id="satollo-menu-nav">
         <ul>
-            <li><a href="?page=satollo-mcp&subpage=index">Home</a></li>
-            <li><a href="?page=satollo-mcp&subpage=list">Servers</a></li>
-            <li><a href="?page=satollo-mcp&subpage=settings">Settings</a></li>
-            <li><a href="?page=satollo-mcp&subpage=logs">Logs</a></li>
+            <li><a href="?page=mcpservers&subpage=index"><?php esc_html_e('Home', 'satollo-mcpservers') ?></a></li>
+            <li><a href="?page=mcpservers&subpage=servers-list"><?php esc_html_e('Servers', 'satollo-mcpservers') ?></a></li>
+            <li><a href="?page=mcpservers&subpage=settings"><?php esc_html_e('Settings', 'satollo-mcpservers') ?></a></li>
+            <li><a href="?page=mcpservers&subpage=logs"><?php esc_html_e('Logs', 'satollo-mcpservers') ?></a></li>
         </ul>
     </div>
 

@@ -1,9 +1,11 @@
 <?php
 
+namespace Satollo\McpServers;
+
 /*
   Plugin Name: Satollo MCP Servers
-  Plugin URI: https://www.satollo.net/plugins/mcp
-  Description: MCP servers using the WP abilties
+  Plugin URI: https://www.satollo.net/plugins/mcpservers
+  Description: Create MCP servers using the WP abilties
   Version: 0.0.5
   Requires PHP: 8.1
   Requires at least: 6.9
@@ -19,10 +21,30 @@ defined('ABSPATH') || exit;
 
 define('SATOLLO_MCP_VERSION', '0.0.5');
 
-add_action('init', function () {
-    require_once __DIR__ . '/vendor/autoload_packages.php';
-    WP\MCP\Core\McpAdapter::instance();
-});
+class Plugin {
+
+    const VERSION = '0.0.5';
+    const SLUG = 'satollo-mcpservers';
+    const PREFIX = 'mcpservers';
+
+    static $settings = null;
+
+    static function init() {
+        add_action('init', function () {
+            require_once __DIR__ . '/vendor/autoload_packages.php';
+            \WP\MCP\Core\McpAdapter::instance();
+        });
+    }
+
+    static function get_settings() {
+        if (!self::$settings) {
+            $settings = (object) get_option(self::PREFIX . '_settings', []);
+        }
+        return self::$settings;
+    }
+}
+
+Plugin::init();
 
 add_action('mcp_adapter_init', function ($adapter) {
     global $wpdb;
@@ -33,8 +55,8 @@ add_action('mcp_adapter_init', function ($adapter) {
     $abilities = wp_get_abilities();
 
     // Load all defined MCP servers
-    $servers = $wpdb->get_results("select * from {$wpdb->prefix}satollo_mcp_servers");
-    $settings = get_option('satollo_mcp_settings', []);
+    $servers = $wpdb->get_results("select * from {$wpdb->prefix}mcpservers_servers");
+    $settings = Plugin::get_settings();
 
     foreach ($servers as $server) {
 
@@ -56,7 +78,7 @@ add_action('mcp_adapter_init', function ($adapter) {
         }
 
         $route = $server->route ?: 'mcp-' . $server->id;
-        $namespace = $server->namespace ?: 'mcps';
+        $namespace = $server->namespace ?: 'mcpservers';
 
         /** @var WP\MCP\Core\McpAdapter $adapter */
         $r = $adapter->create_server(
@@ -70,7 +92,7 @@ add_action('mcp_adapter_init', function ($adapter) {
                     \WP\MCP\Transport\HttpTransport::class, // Recommended: MCP 2025-06-18 compliant
                 ],
                 \WP\MCP\Infrastructure\ErrorHandling\ErrorLogMcpErrorHandler::class, // Error handler
-                ($settings['logging'] ?? false) ? SatolloMcpObservabilityHandler::class : \WP\MCP\Infrastructure\Observability\NullMcpObservabilityHandler::class,
+                ($settings->logging ?? false) ? McpObservabilityHandler::class : \WP\MCP\Infrastructure\Observability\NullMcpObservabilityHandler::class,
                 //WP_DEBUG ? \WP\MCP\Infrastructure\Observability\ErrorLogMcpObservabilityHandler::class : \WP\MCP\Infrastructure\Observability\NullMcpObservabilityHandler::class, // Observability handler
                 $ability_names, // Abilities to expose as tools
                 [], // Resources (optional)
@@ -98,12 +120,12 @@ if (is_admin() || defined('DOING_CRON') && DOING_CRON) {
 }
 
 // Daily cleanup process
-add_action('satollo_mcp_clean_logs', 'satollo_mcp_clean_logs');
-
-function satollo_mcp_clean_logs() {
-    global $wpdb;
-    $settings = get_option('satollo-mcp');
-    $days = (int) ($settings['log_days'] ?? 30);
-    $days = max($days, 1);
-    $wpdb->query($wpdb->prepare("delete from `{$wpdb->prefix}satollo_mcp_logs` where created < date_sub(now(), interval %d day)", $days));
+if (defined('DOING_CRON') && DOING_CRON) {
+    add_action('mcpservers_clean_logs', function () {
+        global $wpdb;
+        $settings = Plugin::get_settings();
+        $days = (int) ($settings->log_days ?? 30);
+        $days = max($days, 1);
+        $wpdb->query($wpdb->prepare("delete from `{$wpdb->prefix}mcpservers_logs` where created < date_sub(now(), interval %d day)", $days));
+    });
 }
