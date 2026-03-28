@@ -3,7 +3,7 @@
 namespace Satollo\McpServers;
 
 /*
-  Plugin Name: Satollo MCP Servers
+  Plugin Name: Satollo MCPServers
   Plugin URI: https://www.satollo.net/plugins/mcpservers
   Description: Create MCP servers using the WP abilties
   Version: 0.0.5
@@ -14,12 +14,12 @@ namespace Satollo\McpServers;
   License: GPLv2 or later
   License URI: https://www.gnu.org/licenses/gpl-2.0.html
   Disclaimer: Use at your own risk. No warranty expressed or implied is provided.
-  Update URI: satollo-mcp
+  Update URI: satollo-mcpservers
  */
 
 defined('ABSPATH') || exit;
 
-define('SATOLLO_MCP_VERSION', '0.0.5');
+// phpcs:disable WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching
 
 class Plugin {
 
@@ -38,7 +38,7 @@ class Plugin {
 
     static function get_settings() {
         if (!self::$settings) {
-            $settings = (object) get_option(self::PREFIX . '_settings', []);
+            self::$settings = (object) get_option(self::PREFIX . '_settings', []);
         }
         return self::$settings;
     }
@@ -49,6 +49,12 @@ class Plugin {
 
     static function update_option($name, $value, $autoload = false) {
         update_option(self::PREFIX . '_' . $name, $value, $autoload);
+    }
+
+    static function log($text) {
+        if (WP_DEBUG) {
+            //error_log('MCPServers > ' . $text);
+        }
     }
 }
 
@@ -70,9 +76,7 @@ add_action('mcp_adapter_init', function ($adapter) {
 
         $categories = wp_parse_list($server->categories ?? []);
         if (empty($categories)) {
-            if (WP_DEBUG) {
-                error_log('No categories for the server ' . $server->id);
-            }
+            Plugin::log('No categories for the server ' . $server->id);
             continue;
         }
 
@@ -107,14 +111,12 @@ add_action('mcp_adapter_init', function ($adapter) {
                 [], // Prompts (optional)
         );
 
-        if (WP_DEBUG) {
-            if (is_wp_error($r)) {
-                /** @var WP_Error $r */
-                error_log($r->get_error_message());
-            } else {
-                /** @var \WP\MCP\Core\McpAdapter $r */
-                error_log('Server created: ' . $server->id);
-            }
+        if (is_wp_error($r)) {
+            /** @var WP_Error $r */
+            Plugin::log($r->get_error_message());
+        } else {
+            /** @var \WP\MCP\Core\McpAdapter $r */
+            Plugin::log('Server created: ' . $server->id);
         }
     }
 });

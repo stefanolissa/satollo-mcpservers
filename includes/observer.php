@@ -4,6 +4,8 @@ namespace Satollo\McpServers;
 
 defined('ABSPATH') || exit;
 
+// phpcs:disable WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching
+
 class McpObservabilityHandler implements \WP\MCP\Infrastructure\Observability\Contracts\McpObservabilityHandlerInterface {
 
     /**
@@ -35,8 +37,8 @@ class McpObservabilityHandler implements \WP\MCP\Infrastructure\Observability\Co
                         'session_id' => $session_id,
                         'client_name' => $tags['params']['client_name'] ?? '',
             ]);
-            if (WP_DEBUG && $wpdb->last_error) {
-                error_log($wpdb->last_error);
+            if ($wpdb->last_error) {
+                Plugin::log($wpdb->last_error);
             }
         }
 

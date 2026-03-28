@@ -11,9 +11,8 @@ class Repository {
 
     static function init() {
         add_filter('update_plugins_' . Plugin::SLUG, function ($update, $plugin_data, $plugin_file, $locales) {
-            if (WP_DEBUG) {
-                error_log('Satollo MCP > update_plugins call');
-            }
+            Plugin::log('update_plugins call');
+
             $data = Plugin::get_option('update_data');
             // phpcs:ignore WordPress.Security.NonceVerification.Recommended
             if ($data && $data->updated < time() - WEEK_IN_SECONDS || isset($_GET['force-check'])) {
@@ -49,9 +48,7 @@ class Repository {
                 return $res;
             }
 
-            if (WP_DEBUG) {
-                error_log('Satollo MCP > plugin_api call');
-            }
+            Plugin::log('plugin_api call');
 
             $response = wp_remote_get('https://www.satollo.net/repo/' . self::REPO_NAME . '/CHANGELOG.md');
             $changelog = '';

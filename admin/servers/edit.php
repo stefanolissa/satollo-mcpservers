@@ -5,6 +5,7 @@ namespace Satollo\McpServers;
 defined('ABSPATH') || exit;
 
 // phpcs:disable WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedVariableFound -- We are inside a function here
+// phpcs:disable WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching
 
 /** @var wpdb $wpdb */
 global $wpdb;

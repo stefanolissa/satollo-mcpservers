@@ -4,10 +4,12 @@ namespace Satollo\McpServers;
 
 defined('ABSPATH') || exit;
 
+// phpcs:disable WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedVariableFound -- We are inside a function here
+
 $post = wp_unslash($_POST);
 
 if (isset($post['save'])) {
-    check_admin_referer('mcpservers-action');
+    check_admin_referer(Admin::$nonce_action);
     $data = $post['data'] ?? [];
     // No lazy loading???
     update_option('mcpservers_settings', $data);
@@ -20,7 +22,7 @@ $data = get_option('mcpservers_settings', []);
 <div class="wrap">
 
     <form method="post">
-        <?php wp_nonce_field('mcpservers-action'); ?>
+        <?php wp_nonce_field(Admin::$nonce_action); ?>
 
         <table class="form-table" role="presentation">
             <tr>
@@ -51,6 +53,6 @@ $data = get_option('mcpservers_settings', []);
     </form>
 
     <h3>Debug</h3>
-    <pre><?php echo esc_html(print_r($data, true)); ?></pre>
+    <pre><?php //echo esc_html(print_r($data, true)); ?></pre>
 
 </div>

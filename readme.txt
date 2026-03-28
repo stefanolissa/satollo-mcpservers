@@ -1,4 +1,4 @@
-=== Satollo MCP ===
+=== Satollo MCPServers ===
 Contributors: satollo
 Tags: ai,mcp
 Requires at least: 6.9
