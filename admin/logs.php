@@ -16,7 +16,7 @@ if (isset($post['clear'])) {
     $wpdb->query("truncate {$wpdb->prefix}mcpservers_logs");
 }
 
-class Logs_List_Table extends WP_List_Table {
+class Logs_List_Table extends \WP_List_Table {
 
     public function __construct() {
         parent::__construct([
@@ -48,14 +48,14 @@ class Logs_List_Table extends WP_List_Table {
 
         $per_page = 100;
         $current_page = $this->get_pagenum();
-        $total_items = (int) $wpdb->get_var("select count(*) from {$wpdb->prefix}mcpservers_logs_logs");
+        $total_items = (int) $wpdb->get_var("select count(*) from {$wpdb->prefix}mcpservers_logs");
 
         $this->set_pagination_args([
             'total_items' => $total_items,
             'per_page' => $per_page,
         ]);
 
-        $this->items = $wpdb->get_results($wpdb->prepare("select * from {$wpdb->prefix}mcpservers_logs_logs order by id desc limit %d offset %d",
+        $this->items = $wpdb->get_results($wpdb->prepare("select * from {$wpdb->prefix}mcpservers_logs order by id desc limit %d offset %d",
                         $per_page, ($current_page - 1) * $per_page));
     }
 

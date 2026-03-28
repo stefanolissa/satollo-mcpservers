@@ -7,7 +7,7 @@
         <basename property="dir" file="${project.basedir}"/>
         <echo>Basedir: ${dir}</echo>
 
-        <property name="basename" value="mcp"/>
+        <property name="basename" value="mcpservers"/>
         <property name="slug" value="satollo-${basename}"/>
         <echo>Slug: ${slug}</echo>
 

@@ -1,31 +1,31 @@
 <?php
 
-namespace Satollo\Mcp;
+namespace Satollo\McpServers;
 
 defined('ABSPATH') || exit;
 
 class Repository {
 
-    const SLUG = 'satollo-mcp';
-    const REPO_NAME = 'mcp';
+    const REPO_NAME = 'mcpservers';
     const NAME = 'Satollo MCP Servers';
 
     static function init() {
-        add_filter('update_plugins_' . self::SLUG, function ($update, $plugin_data, $plugin_file, $locales) {
+        add_filter('update_plugins_' . Plugin::SLUG, function ($update, $plugin_data, $plugin_file, $locales) {
             if (WP_DEBUG) {
                 error_log('Satollo MCP > update_plugins call');
             }
-            $data = get_option('satollo_mcp_update_data');
+            $data = Plugin::get_option('update_data');
+            // phpcs:ignore WordPress.Security.NonceVerification.Recommended
             if ($data && $data->updated < time() - WEEK_IN_SECONDS || isset($_GET['force-check'])) {
                 $data = false;
             }
 
             if (!$data) {
                 $response = wp_remote_get('https://www.satollo.net/repo/' . self::REPO_NAME . '/plugin.json');
-                $data = json_decode(\wp_remote_retrieve_body($response));
+                $data = json_decode(wp_remote_retrieve_body($response));
                 if (is_object($data)) {
                     $data->updated = time();
-                    update_option('satollo_mcp_update_data', $data, false);
+                    Plugin::update_option('update_data', $data, false);
                 }
             }
 
@@ -33,7 +33,7 @@ class Repository {
 
                 $update = [
                     'version' => $data->version,
-                    'slug' => self::SLUG,
+                    'slug' => Plugin::SLUG,
                     'url' => 'https://www.satollo.net/plugins/' . self::REPO_NAME,
                     'package' => 'https://www.satollo.net/repo/' . self::REPO_NAME . '/' . self::REPO_NAME . '.zip'
                 ];
@@ -45,7 +45,7 @@ class Repository {
 
         add_filter('plugins_api', function ($res, $action, $args) {
 
-            if ($action !== 'plugin_information' || $args->slug !== self::SLUG) {
+            if ($action !== 'plugin_information' || $args->slug !== Plugin::SLUG) {
                 return $res;
             }
 
@@ -69,7 +69,7 @@ class Repository {
 
             $res = new \stdClass();
             $res->name = self::NAME;
-            $res->slug = self::SLUG;
+            $res->slug = Plugin::SLUG;
             $res->version = Plugin::VERSION;
             $res->author = '<a href="https://www.satollo.net">Stefano Lissa</a>';
             $res->homepage = 'https://www.satollo.net/plugins/' . self::REPO_NAME;

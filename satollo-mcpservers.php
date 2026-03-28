@@ -42,6 +42,14 @@ class Plugin {
         }
         return self::$settings;
     }
+
+    static function get_option($name) {
+        return get_option(self::PREFIX . '_' . $name);
+    }
+
+    static function update_option($name, $value, $autoload = false) {
+        update_option(self::PREFIX . '_' . $name, $value, $autoload);
+    }
 }
 
 Plugin::init();
