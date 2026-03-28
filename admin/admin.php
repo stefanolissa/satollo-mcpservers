@@ -31,7 +31,7 @@ class Admin {
             add_options_page(
                     'MCP Servers', 'MCP Servers', 'administrator', Plugin::PREFIX,
                     function () {
-                        // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+                        // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Not relevant here
                         $subpage = sanitize_key($_GET['subpage'] ?? '');
                         switch ($subpage) {
                             case 'settings':

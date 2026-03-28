@@ -29,13 +29,40 @@
                 <exclude name="${dir}/nbproject/**" />
                 <exclude name="${dir}/build.xml" />
                 <exclude name="${dir}/phpstan.*" />
-                <exclude name="${dir}/includes/block-jsons/**" />
+                <exclude name="${dir}/composer.*" />
+                <exclude name="${dir}/readme.txt" />
             </fileset>
         </zip>
 
         <delete file="${zipfileversion}"/>
         <copy file="${zipfile}" tofile="${zipfileversion}" />
 
+
+    </target>
+
+    <target name="wp">
+
+        <basename property="dir" file="${project.basedir}"/>
+        <echo>Basedir: ${dir}</echo>
+
+        <property name="slug" value="satollo-mcpservers"/>
+        <echo>Slug: ${slug}</echo>
+
+        <property name="zipfile" value="../${slug}-wp.zip"/>
+        <delete file="${zipfile}"/>
+        <zip destfile="${zipfile}">
+            <fileset dir="..">
+                <include name="${dir}/**"/>
+                <exclude name="${dir}/.git/**" />
+                <exclude name="${dir}/.gitignore" />
+                <exclude name="${dir}/nbproject/**" />
+                <exclude name="${dir}/build.xml" />
+                <exclude name="${dir}/phpstan.*" />
+                <exclude name="${dir}/*.md" />
+                <exclude name="${dir}/includes/repo.php" />
+                <exclude name="${dir}/composer.*" />
+            </fileset>
+        </zip>
 
     </target>
 

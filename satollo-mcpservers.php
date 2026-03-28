@@ -126,7 +126,9 @@ if (is_admin()) {
 }
 
 if (is_admin() || defined('DOING_CRON') && DOING_CRON) {
-    require_once __DIR__ . '/includes/repo.php';
+    if (file_exists(__DIR__ . '/includes/repo.php')) {
+        require_once __DIR__ . '/includes/repo.php';
+    }
 }
 
 // Daily cleanup process

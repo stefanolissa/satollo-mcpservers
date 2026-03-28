@@ -57,7 +57,7 @@ class Servers_List_Table extends \WP_List_Table {
             'name' => __('Name', 'satollo-mcpservers'),
             'description' => __('Description', 'satollo-mcpservers'),
             'url' => 'URL',
-            'categories' => __('Description', 'satollo-mcpservers'),
+            'categories' => __('Categories', 'satollo-mcpservers'),
             'actions' => __('Actions', 'satollo-mcpservers'),
         ];
         return $columns;
