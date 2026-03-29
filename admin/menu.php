@@ -12,6 +12,7 @@ defined('ABSPATH') || exit;
             <li><a href="?page=mcpservers&subpage=servers-list"><?php esc_html_e('Servers', 'satollo-mcpservers') ?></a></li>
             <li><a href="?page=mcpservers&subpage=settings"><?php esc_html_e('Settings', 'satollo-mcpservers') ?></a></li>
             <li><a href="?page=mcpservers&subpage=logs"><?php esc_html_e('Logs', 'satollo-mcpservers') ?></a></li>
+            <li><a href="https://www.satollo.net/plugins/mcpservers" target="_blank"><?php esc_html_e('Help', 'satollo-mcpservers') ?></a></li>
         </ul>
     </div>
 

@@ -8,10 +8,12 @@ class Admin {
 
     static $page;
     static $nonce_action;
+    static $nonce_name;
 
     static function init() {
         self::$page = '?page=' . Plugin::PREFIX;
         self::$nonce_action = Plugin::PREFIX . '-action';
+        self::$nonce_name = Plugin::PREFIX . '-nonce';
 
         $version = get_option(Plugin::PREFIX . '_version');
         if (Plugin::VERSION !== $version) {

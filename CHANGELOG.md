@@ -1,5 +1,8 @@
 # Changelog
 
+## 0.0.7
+- Patched a bug in the adapter library
+
 ## 0.0.6
 - Work in progress
 

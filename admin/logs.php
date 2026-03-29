@@ -12,7 +12,7 @@ global $wpdb;
 $post = wp_unslash($_POST);
 
 if (isset($post['clear'])) {
-    check_admin_referer(Admin::$nonce_action);
+    check_admin_referer(Admin::$nonce_action, Admin::$nonce_name);
     $wpdb->query("truncate {$wpdb->prefix}mcpservers_logs");
 }
 
@@ -24,6 +24,15 @@ class Logs_List_Table extends \WP_List_Table {
             'plural' => __('Event', 'satollo-mcpservers'),
             'ajax' => false,
         ]);
+    }
+
+    function extra_tablenav($which) {
+        if ($which == 'top') {
+            // The button will appear next to the 'Apply' bulk action button
+            echo '<div class="alignleft actions">';
+            echo '<button name="clear" class="button button-secondary">', esc_html_e('Clear', 'satollo-mcpservers'), '</button>';
+            echo '</div>';
+        }
     }
 
     public function get_columns() {
@@ -95,10 +104,8 @@ $settings = Plugin::get_settings();
     <?php } ?>
 
     <form method="post">
-        <?php wp_nonce_field(Admin::$nonce_action); ?>
-        <button name="clear" class="button button-secondary"><?php esc_html_e('Clear', 'satollo-mcpservers'); ?></button>
+        <?php wp_nonce_field(Admin::$nonce_action, Admin::$nonce_name); ?>
+
+        <?php $table->display(); ?>
     </form>
-
-    <?php $table->display(); ?>
-
 </div>

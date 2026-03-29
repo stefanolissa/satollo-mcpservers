@@ -45,7 +45,11 @@ $categories = wp_get_ability_categories();
 <div class="wrap">
     <div class="satollo-notice satollo-notice-warning">
         <?php esc_html_e('Warning: abilities are provided by third parties and they are responsible for permission check.', 'satollo-mcpservers'); ?>
+    </div>
 
+    <div class="satollo-notice satollo-notice-warning">
+        If no tools are shown when you connected to this MCP Server, please enable only the category "Site" and check again. If
+        the tools appears, it means one or more abilities have problems in the schema declaration. Contact the author.
     </div>
 
     <form method="post">
