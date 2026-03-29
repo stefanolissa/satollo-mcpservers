@@ -6,7 +6,7 @@ namespace Satollo\McpServers;
   Plugin Name: Satollo MCPServers
   Plugin URI: https://www.satollo.net/plugins/mcpservers
   Description: Create MCP servers using the WP abilties
-  Version: 0.0.7
+  Version: 0.0.8
   Requires PHP: 8.1
   Requires at least: 6.9
   Author: Stefano Lissa
@@ -23,7 +23,7 @@ defined('ABSPATH') || exit;
 
 class Plugin {
 
-    const VERSION = '0.0.7';
+    const VERSION = '0.0.8';
     const SLUG = 'satollo-mcpservers';
     const PREFIX = 'mcpservers';
 
@@ -75,19 +75,24 @@ add_action('mcp_adapter_init', function ($adapter) {
     foreach ($servers as $server) {
 
         $categories = wp_parse_list($server->categories ?? []);
+
         if (empty($categories)) {
             Plugin::log('No categories for the server ' . $server->id);
             continue;
         }
 
         // List of the ability names, since the MCP adaper want only the names, not the ability objects (?)
+        // This adds only the abilities of full categories
         $ability_names = [];
         foreach ($abilities as $ability) {
             /** @var WP_Ability $ability */
             if (in_array($ability->get_category(), $categories)) {
+
                 $ability_names[] = $ability->get_name();
             }
         }
+
+        $ability_names = array_merge($ability_names, wp_parse_list($server->abilities ?? []));
 
         $route = $server->route ?: 'mcp-' . $server->id;
         $namespace = $server->namespace ?: 'mcpservers';
