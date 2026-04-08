@@ -109,7 +109,7 @@ add_action('mcp_adapter_init', function ($adapter) {
                     \WP\MCP\Transport\HttpTransport::class, // Recommended: MCP 2025-06-18 compliant
                 ],
                 \WP\MCP\Infrastructure\ErrorHandling\ErrorLogMcpErrorHandler::class, // Error handler
-                ($settings->logging ?? false) ? McpObservabilityHandler::class : \WP\MCP\Infrastructure\Observability\NullMcpObservabilityHandler::class,
+                ($settings->debug ?? false) ? McpObservabilityHandler::class : \WP\MCP\Infrastructure\Observability\NullMcpObservabilityHandler::class,
                 //WP_DEBUG ? \WP\MCP\Infrastructure\Observability\ErrorLogMcpObservabilityHandler::class : \WP\MCP\Infrastructure\Observability\NullMcpObservabilityHandler::class, // Observability handler
                 $ability_names, // Abilities to expose as tools
                 [], // Resources (optional)
