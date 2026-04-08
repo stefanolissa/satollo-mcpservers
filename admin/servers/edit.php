@@ -56,8 +56,26 @@ if (isset($post['save'])) {
     $data['categories'] = wp_parse_list($server['categories'] ?? []);
     $data['abilities'] = wp_parse_list($server['abilities'] ?? []);
 }
-
 ?>
+<script>
+    jQuery(function () {
+        jQuery('.mcpservers-abilities').hide();
+        jQuery('.mcpserver-category').each(function () {
+            if (this.value.indexOf('*') > 0) {
+                jQuery('#abilities-' + this.value.replace('*', '')).show();
+            }
+        });
+
+        jQuery('.mcpserver-category').on('change', function () {
+            jQuery('.mcpservers-abilities').hide();
+            jQuery('.mcpserver-category').each(function () {
+                if (this.value.indexOf('*') > 0) {
+                    jQuery('#abilities-' + this.value.replace('*', '')).show();
+                }
+            });
+        });
+    });
+</script>
 <?php include __DIR__ . '/../menu.php'; ?>
 <div class="wrap">
     <div class="satollo-notice satollo-notice-warning">
@@ -113,23 +131,24 @@ if (isset($post['save'])) {
                                 <small><?php echo esc_html($category->get_description()) ?></small>
                             </label>
                             <br>-->
-                            <select name="data[categories][]">
-                                <option value="" <?php echo $log_days == 15 ? 'selected' : ''; ?>>Not exposed</option>
+                            <select name="data[categories][]" class="mcpserver-category">
+                                <option value="">Not exposed</option>
                                 <option value="<?php echo esc_attr($slug) ?>" <?php echo in_array($slug, $data['categories']) ? 'selected' : ''; ?>>All abilities exposed</option>
                                 <option value="<?php echo esc_attr($slug) ?>*" <?php echo in_array($slug . '*', $data['categories']) ? 'selected' : ''; ?>>Specific abilities exposed</option>
                             </select>
-                            <br>
-                            <?php foreach ($abilities as $ability) { ?>
-                                <?php if ($category->get_slug() !== $ability->get_category()) continue; ?>
-                                <label>
-                                    <input type="checkbox" name="data[abilities][]" value="<?php echo esc_attr($ability->get_name()) ?>" <?php echo in_array($ability->get_name(), $data['abilities']) ? 'checked' : ''; ?>>
-                                    <?php echo esc_html($ability->get_label()) ?>
+                            <div id="abilities-<?php echo esc_attr($slug) ?>" class="mcpservers-abilities">
+                                <?php foreach ($abilities as $ability) { ?>
+                                    <?php if ($category->get_slug() !== $ability->get_category()) continue; ?>
+                                    <label>
+                                        <input type="checkbox" name="data[abilities][]" value="<?php echo esc_attr($ability->get_name()) ?>" <?php echo in_array($ability->get_name(), $data['abilities']) ? 'checked' : ''; ?>>
+                                        <?php echo esc_html($ability->get_label()) ?>
 
-                                    - <small><?php echo esc_html($ability->get_description()) ?></small>
-                                </label>
+                                        - <small><?php echo esc_html($ability->get_description()) ?></small>
+                                    </label>
 
-                                <br>
-                            <?php } ?>
+                                    <br>
+                                <?php } ?>
+                            </div>
 
                         </td>
 
