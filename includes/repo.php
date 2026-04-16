@@ -34,7 +34,15 @@ class Repository {
                     'version' => $data->version,
                     'slug' => Plugin::SLUG,
                     'url' => 'https://www.satollo.net/plugins/' . self::REPO_NAME,
-                    'package' => 'https://www.satollo.net/repo/' . self::REPO_NAME . '/' . self::REPO_NAME . '.zip'
+                    'package' => 'https://www.satollo.net/repo/' . self::REPO_NAME . '/' . self::REPO_NAME . '.zip',
+                    'banners' => [
+                        'low' => 'https://www.satollo.net/repo/' . self::REPO_NAME . '/banner.png',
+                        'high' => 'https://www.satollo.net/repo/' . self::REPO_NAME . '/banner.png'
+                    ],
+                    'icons' => [
+                        '1x' => 'https://www.satollo.net/repo/' . self::REPO_NAME . '/icon.png',
+                        '2x' => 'https://www.satollo.net/repo/' . self::REPO_NAME . '/icon.png'
+                    ]
                 ];
                 return $update;
             } else {
