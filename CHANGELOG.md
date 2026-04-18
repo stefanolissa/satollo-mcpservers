@@ -1,7 +1,10 @@
 # Changelog
 
+## 0.0.8
+- Added single ability selector
+
 ## 0.0.7
-- Patched a bug in the adapter library
+- Patched a bug in the adapter library (waiting for the official release)
 
 ## 0.0.6
 - Work in progress

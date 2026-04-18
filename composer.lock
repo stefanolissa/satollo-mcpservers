@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "db6978662122536a2f42ee39d001d95f",
+    "content-hash": "15f5d876827343dc3fbd6dd4506267b8",
     "packages": [
         {
             "name": "automattic/jetpack-autoloader",
@@ -77,12 +77,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/WordPress/mcp-adapter.git",
-                "reference": "912c0ba15f60bd1038c1215b6d1fede0ec66075d"
+                "reference": "7bfc49f46b3ea7544dded49d5a606089f825a80b"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/WordPress/mcp-adapter/zipball/912c0ba15f60bd1038c1215b6d1fede0ec66075d",
-                "reference": "912c0ba15f60bd1038c1215b6d1fede0ec66075d",
+                "url": "https://api.github.com/repos/WordPress/mcp-adapter/zipball/7bfc49f46b3ea7544dded49d5a606089f825a80b",
+                "reference": "7bfc49f46b3ea7544dded49d5a606089f825a80b",
                 "shasum": ""
             },
             "require": {
@@ -147,20 +147,20 @@
                 "issues": "https://github.com/wordpress/mcp-adapter/issues",
                 "source": "https://github.com/wordpress/mcp-adapter"
             },
-            "time": "2026-04-07T09:56:11+00:00"
+            "time": "2026-04-14T12:12:58+00:00"
         },
         {
             "name": "wordpress/php-mcp-schema",
-            "version": "v0.1.0",
+            "version": "v0.1.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/WordPress/php-mcp-schema.git",
-                "reference": "b1003dd4d223ef727f19a3163755163461009289"
+                "reference": "e2118ec421ead51a3e17a3d8160f4537727e91b9"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/WordPress/php-mcp-schema/zipball/b1003dd4d223ef727f19a3163755163461009289",
-                "reference": "b1003dd4d223ef727f19a3163755163461009289",
+                "url": "https://api.github.com/repos/WordPress/php-mcp-schema/zipball/e2118ec421ead51a3e17a3d8160f4537727e91b9",
+                "reference": "e2118ec421ead51a3e17a3d8160f4537727e91b9",
                 "shasum": ""
             },
             "require": {
@@ -196,9 +196,9 @@
             ],
             "support": {
                 "issues": "https://github.com/WordPress/php-mcp-schema/issues",
-                "source": "https://github.com/WordPress/php-mcp-schema/tree/v0.1.0"
+                "source": "https://github.com/WordPress/php-mcp-schema/tree/v0.1.1"
             },
-            "time": "2026-03-02T08:25:49+00:00"
+            "time": "2026-04-10T19:35:16+00:00"
         }
     ],
     "packages-dev": [],

@@ -8,7 +8,7 @@
         }
     ],
     "require": {
-        "wordpress/mcp-adapter": "* dev-trunk",
+        "wordpress/mcp-adapter": "dev-trunk",
         "automattic/jetpack-autoloader": "v5.0.*"
     },
 

@@ -19,6 +19,9 @@ if (!$server) {
 
 $post = wp_unslash($_POST);
 
+$categories = wp_get_ability_categories();
+$abilities = wp_get_abilities();
+
 if (isset($post['save'])) {
     check_admin_referer(Admin::$nonce_action);
 
@@ -26,7 +29,21 @@ if (isset($post['save'])) {
 
     $row['name'] = wp_strip_all_tags($data['name']) ?: 'Server';
     $row['description'] = wp_kses_post($data['description']);
-    $row['categories'] = implode(',', $data['categories'] ?? []);
+    $data['categories'] ??= [];
+    $row['categories'] = implode(',', $data['categories']);
+    $data['abilities'] ??= [];
+
+    // Keep only the abilities of partial categories
+    $row['abilities'] = [];
+    foreach ($data['abilities'] as $ability_name) {
+        $ability = wp_get_ability($ability_name);
+        if ($ability && in_array($ability->get_category() . '*', $data['categories'])) {
+            $row['abilities'][] = $ability_name;
+        }
+    }
+    $data['abilities'] = $row['abilities'];
+
+    $row['abilities'] = implode(',', $row['abilities']);
     $row['route'] = sanitize_key($data['route'] ?? '');
     $row['namespace'] = sanitize_key($data['namespace'] ?? '');
 
@@ -37,10 +54,28 @@ if (isset($post['save'])) {
 } else {
     $data = $server;
     $data['categories'] = wp_parse_list($server['categories'] ?? []);
+    $data['abilities'] = wp_parse_list($server['abilities'] ?? []);
 }
-
-$categories = wp_get_ability_categories();
 ?>
+<script>
+    jQuery(function () {
+        jQuery('.mcpservers-abilities').hide();
+        jQuery('.mcpserver-category').each(function () {
+            if (this.value.indexOf('*') > 0) {
+                jQuery('#abilities-' + this.value.replace('*', '')).show();
+            }
+        });
+
+        jQuery('.mcpserver-category').on('change', function () {
+            jQuery('.mcpservers-abilities').hide();
+            jQuery('.mcpserver-category').each(function () {
+                if (this.value.indexOf('*') > 0) {
+                    jQuery('#abilities-' + this.value.replace('*', '')).show();
+                }
+            });
+        });
+    });
+</script>
 <?php include __DIR__ . '/../menu.php'; ?>
 <div class="wrap">
     <div class="satollo-notice satollo-notice-warning">
@@ -81,16 +116,47 @@ $categories = wp_get_ability_categories();
 
         <h3><?php esc_html_e('Abilities to expose', 'satollo-mcpservers'); ?></h3>
 
-        <?php foreach ($categories as $category) { ?>
-            <label>
-                <input type="checkbox" name="data[categories][]" value="<?php echo esc_attr($category->get_slug()) ?>" <?php echo in_array($category->get_slug(), $data['categories']) ? 'checked' : ''; ?>>
-                <?php echo esc_html($category->get_label()) ?>
-                <br>
-                <small><?php echo esc_html($category->get_description()) ?></small>
-            </label>
-            <br>
-        <?php } ?>
+        <table class="form-table">
+            <tbody>
+                <?php foreach ($categories as $category) { ?>
+                    <?php $slug = $category->get_slug(); ?>
+                    <tr>
+                        <th>
+                            <?php echo esc_html($category->get_label()) ?>
+                        </th>
+                        <td><!--
+                            <label>
+                                <input type="checkbox" name="data[categories][]" value="<?php echo esc_attr($category->get_slug()) ?>" <?php echo in_array($category->get_slug(), $data['categories']) ? 'checked' : ''; ?>>
+                            <?php echo esc_html($category->get_label()) ?>
+                                <small><?php echo esc_html($category->get_description()) ?></small>
+                            </label>
+                            <br>-->
+                            <select name="data[categories][]" class="mcpserver-category">
+                                <option value="">Not exposed</option>
+                                <option value="<?php echo esc_attr($slug) ?>" <?php echo in_array($slug, $data['categories']) ? 'selected' : ''; ?>>All abilities exposed</option>
+                                <option value="<?php echo esc_attr($slug) ?>*" <?php echo in_array($slug . '*', $data['categories']) ? 'selected' : ''; ?>>Specific abilities exposed</option>
+                            </select>
+                            <div id="abilities-<?php echo esc_attr($slug) ?>" class="mcpservers-abilities">
+                                <?php foreach ($abilities as $ability) { ?>
+                                    <?php if ($category->get_slug() !== $ability->get_category()) continue; ?>
+                                    <label>
+                                        <input type="checkbox" name="data[abilities][]" value="<?php echo esc_attr($ability->get_name()) ?>" <?php echo in_array($ability->get_name(), $data['abilities']) ? 'checked' : ''; ?>>
+                                        <?php echo esc_html($ability->get_label()) ?>
 
+                                        - <small><?php echo esc_html($ability->get_description()) ?></small>
+                                    </label>
+
+                                    <br>
+                                <?php } ?>
+                            </div>
+
+                        </td>
+
+                    </tr>
+
+                <?php } ?>
+            </tbody>
+        </table>
         <p><button name="save" class="button button-primary"><?php esc_html_e('Save', 'satollo-mcpservers'); ?></button></p>
     </form>
 </div>
