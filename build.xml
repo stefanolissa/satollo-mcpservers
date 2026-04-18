@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <project name="plugin" default="package">
+    <property name="svndir" value="c:/progetti/plugins/satollo-mcpservers-svn"/>
 
     <target name="package">
 
@@ -38,6 +39,44 @@
         <copy file="${zipfile}" tofile="${zipfileversion}" />
 
 
+    </target>
+
+    <target name="publishwp">
+
+        <loadfile property="plugin" file="satollo-mcpservers.php"/>
+
+        <propertyregex pattern="Version: ([^\s]+)" match="$1" property="version" subject="${plugin}"/>
+        <echo>Version: ${version}</echo>
+
+        <available file="${svndir}/tags/${version}" type="dir" property="tagexists" />
+        <fail if="tagexists" message="Tag already exists, manually delete" />
+
+        <delete>
+            <fileset dir="${svndir}/trunk">
+                <include name="**"/>
+            </fileset>
+        </delete>
+
+        <copy todir="${svndir}/trunk" overwrite="true">
+            <fileset dir=".">
+                <include name="**/*.*" />
+                <exclude name=".git/**" />
+                <exclude name=".gitignore" />
+                <exclude name="nbproject/**" />
+                <exclude name="build.xml" />
+                <exclude name="phpstan.*" />
+                <exclude name="*.md" />
+                <exclude name="includes/repo.php" />
+            </fileset>
+        </copy>
+
+        <replaceregexp file="${svndir}/trunk/satollo-mcpservers.php" match="Update URI.*" replace=""/>
+
+        <copy todir="${svndir}/tags/${version}" >
+            <fileset dir="${svndir}/trunk">
+                <include name="**"/>
+            </fileset>
+        </copy>
     </target>
 
     <target name="wp">
@@ -81,7 +120,7 @@
         <echo>${result}</echo>
     </target>
 
-        <target name="update-newsletter">
+    <target name="update-newsletter">
         <copy todir="../../wordpress-test/wp-content/plugins/satollo-${basename}" overwrite="true">
             <fileset dir=".">
                 <include name="**/*.*" />
