@@ -48,8 +48,7 @@
         <propertyregex pattern="Version: ([^\s]+)" match="$1" property="version" subject="${plugin}"/>
         <echo>Version: ${version}</echo>
 
-        <available file="${svndir}/tags/${version}" type="dir" property="tagexists" />
-        <fail if="tagexists" message="Tag already exists, manually delete" />
+
 
         <delete>
             <fileset dir="${svndir}/trunk">
@@ -71,15 +70,16 @@
         </copy>
 
         <replaceregexp file="${svndir}/trunk/satollo-mcpservers.php" match="Update URI.*" replace=""/>
-
-        <copy todir="${svndir}/tags/${version}" >
+        <available file="${svndir}/tags/${version}" type="dir" property="tagexists" />
+        <fail if="tagexists" message="Tag already exists, manually delete" />
+<!--        <copy todir="${svndir}/tags/${version}" >
             <fileset dir="${svndir}/trunk">
                 <include name="**"/>
             </fileset>
-        </copy>
+        </copy>-->
     </target>
 
-    <target name="wp">
+<!--    <target name="wp">
 
         <basename property="dir" file="${project.basedir}"/>
         <echo>Basedir: ${dir}</echo>
@@ -103,7 +103,7 @@
             </fileset>
         </zip>
 
-    </target>
+    </target>-->
 
     <target name="publish" depends="package">
         <exec executable="scp" outputProperty="result">
@@ -127,4 +127,18 @@
             </fileset>
         </copy>
     </target>
+
+    <target name="update-test">
+        <delete>
+            <fileset dir="c:/progetti/wordpress-test/ai/wp-content/plugins/satollo-mcpservers">
+                <include name="**"/>
+            </fileset>
+        </delete>
+        <copy todir="c:/progetti/wordpress-test/ai/wp-content/plugins/satollo-mcpservers" overwrite="true">
+            <fileset dir=".">
+                <include name="**/*.*" />
+            </fileset>
+        </copy>
+    </target>
+    
 </project>

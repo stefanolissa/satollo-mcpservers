@@ -30,7 +30,7 @@ if (isset($post['save'])) {
     $row['name'] = wp_strip_all_tags($data['name']) ?: 'Server';
     $row['description'] = wp_kses_post($data['description']);
     $data['categories'] ??= [];
-    $row['categories'] = implode(',', $data['categories']);
+    $row['categories'] = implode(',', array_map('sanitize_key', $data['categories']));
     $data['abilities'] ??= [];
 
     // Keep only the abilities of partial categories
@@ -38,7 +38,7 @@ if (isset($post['save'])) {
     foreach ($data['abilities'] as $ability_name) {
         $ability = wp_get_ability($ability_name);
         if ($ability && in_array($ability->get_category() . '*', $data['categories'])) {
-            $row['abilities'][] = $ability_name;
+            $row['abilities'][] = $ability->get_name();
         }
     }
     $data['abilities'] = $row['abilities'];
