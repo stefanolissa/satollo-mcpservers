@@ -2,20 +2,15 @@
 
 <project name="plugin" default="package">
     <property name="svndir" value="c:/progetti/plugins/satollo-mcpservers-svn"/>
+    <property name="basename" value="satollo-mcpservers"/>
 
-    <target name="package">
-
-        <basename property="dir" file="${project.basedir}"/>
-        <echo>Basedir: ${dir}</echo>
-
-        <property name="basename" value="mcpservers"/>
-        <property name="slug" value="satollo-${basename}"/>
-        <echo>Slug: ${slug}</echo>
-
-        <loadfile property="plugin" file="satollo-${basename}.php"/>
-
+    <target name="_version">
+        <loadfile property="plugin" file="${basename}.php"/>
         <propertyregex pattern="Version: ([^\s]+)" match="$1" property="version" subject="${plugin}"/>
         <echo>Version: ${version}</echo>
+    </target>
+
+    <target name="package" depends="_version">
 
         <echo file="../plugin.json">{ "version": "${version}" }</echo>
 
@@ -23,15 +18,15 @@
         <property name="zipfileversion" value="../${basename}-${version}.zip"/>
         <delete file="${zipfile}"/>
         <zip destfile="${zipfile}">
-            <fileset dir="..">
-                <include name="${dir}/**"/>
-                <exclude name="${dir}/.git/**" />
-                <exclude name="${dir}/.gitignore" />
-                <exclude name="${dir}/nbproject/**" />
-                <exclude name="${dir}/build.xml" />
-                <exclude name="${dir}/phpstan.*" />
-                <exclude name="${dir}/composer.*" />
-                <exclude name="${dir}/readme.txt" />
+            <fileset dir=".">
+                <include name="**"/>
+                <exclude name=".git/**" />
+                <exclude name=".gitignore" />
+                <exclude name="nbproject/**" />
+                <exclude name="build.xml" />
+                <exclude name="phpstan.*" />
+                <exclude name="composer.*" />
+                <exclude name="readme.txt" />
             </fileset>
         </zip>
 
@@ -41,14 +36,10 @@
 
     </target>
 
-    <target name="publishwp">
+    <target name="publishwp" depends="_version">
 
-        <loadfile property="plugin" file="satollo-mcpservers.php"/>
-
-        <propertyregex pattern="Version: ([^\s]+)" match="$1" property="version" subject="${plugin}"/>
-        <echo>Version: ${version}</echo>
-
-
+        <available file="${svndir}/tags/${version}" type="dir" property="tagexists" />
+        <fail if="tagexists" message="Tag already exists, manually delete" />
 
         <delete>
             <fileset dir="${svndir}/trunk">
@@ -70,16 +61,36 @@
         </copy>
 
         <replaceregexp file="${svndir}/trunk/satollo-mcpservers.php" match="Update URI.*" replace=""/>
-        <available file="${svndir}/tags/${version}" type="dir" property="tagexists" />
-        <fail if="tagexists" message="Tag already exists, manually delete" />
-<!--        <copy todir="${svndir}/tags/${version}" >
+
+        <exec executable="svn" outputProperty="output">
+            <arg value="add"/>
+            <arg value="--force"/>
+            <arg value="${svndir}/trunk/*"/>
+        </exec>
+        <echo>${output}</echo>
+
+<!--        <exec executable="svn" outputProperty="output">
+            <arg value="cp"/>
+            <arg file="${svndir}/trunk"/>
+            <arg value="${svndir}/tags/${version}"/>
+        </exec>
+        <echo>${output}</echo>-->
+
+        <copy todir="${svndir}/tags/${version}" >
             <fileset dir="${svndir}/trunk">
                 <include name="**"/>
             </fileset>
-        </copy>-->
+        </copy>
+
+        <exec executable="svn" outputProperty="output">
+            <arg value="add"/>
+            <arg value="--force"/>
+            <arg value="${svndir}/tags/${version}"/>
+        </exec>
+        <echo>${output}</echo>
     </target>
 
-<!--    <target name="wp">
+    <!--    <target name="wp">
 
         <basename property="dir" file="${project.basedir}"/>
         <echo>Basedir: ${dir}</echo>
@@ -114,14 +125,14 @@
             <arg file="../plugin.json"/>
             <arg file="CHANGELOG.md"/>
             <arg file="README.md"/>
-            <arg value="root@www.satollo.net:/var/www/www.satollo.net/repo/${basename}"/>
+            <arg value="root@www.satollo.net:/var/www/www.satollo.net/repo/mcpservers"/>
         </exec>
 
         <echo>${result}</echo>
     </target>
 
     <target name="update-newsletter">
-        <copy todir="../../wordpress-test/wp-content/plugins/satollo-${basename}" overwrite="true">
+        <copy todir="../../wordpress-test/wp-content/plugins/${basename}" overwrite="true">
             <fileset dir=".">
                 <include name="**/*.*" />
             </fileset>
@@ -140,5 +151,5 @@
             </fileset>
         </copy>
     </target>
-    
+
 </project>

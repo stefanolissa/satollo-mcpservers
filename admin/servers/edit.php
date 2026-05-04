@@ -30,7 +30,7 @@ if (isset($post['save'])) {
     $row['name'] = wp_strip_all_tags($data['name']) ?: 'Server';
     $row['description'] = wp_kses_post($data['description']);
     $data['categories'] ??= [];
-    $row['categories'] = implode(',', array_map('sanitize_key', $data['categories']));
+    $row['categories'] = implode(',', array_filter(array_map('sanitize_key', $data['categories'])));
     $data['abilities'] ??= [];
 
     // Keep only the abilities of partial categories
@@ -78,9 +78,6 @@ if (isset($post['save'])) {
 </script>
 <?php include __DIR__ . '/../menu.php'; ?>
 <div class="wrap">
-    <div class="satollo-notice satollo-notice-warning">
-        <?php esc_html_e('Warning: abilities are provided by third parties and they are responsible for permission check.', 'satollo-mcpservers'); ?>
-    </div>
 
     <div class="satollo-notice satollo-notice-warning">
         If no tools are shown when you connected to this MCP Server, please enable only the category "Site" and check again. If
@@ -116,6 +113,9 @@ if (isset($post['save'])) {
 
         <h3><?php esc_html_e('Abilities to expose', 'satollo-mcpservers'); ?></h3>
 
+        <div class="satollo-notice satollo-notice-warning">
+            <?php esc_html_e('Warning: abilities are provided by third parties and they are responsible for permission check.', 'satollo-mcpservers'); ?>
+        </div>
         <table class="form-table">
             <tbody>
                 <?php foreach ($categories as $category) { ?>
@@ -159,4 +159,9 @@ if (isset($post['save'])) {
         </table>
         <p><button name="save" class="button button-primary"><?php esc_html_e('Save', 'satollo-mcpservers'); ?></button></p>
     </form>
+
+    <?php if (WP_DEBUG) { ?>
+        <h3>Debug</h3>
+        <pre><?= esc_html(print_r($server, true)); ?></pre>
+    <?php } ?>
 </div>

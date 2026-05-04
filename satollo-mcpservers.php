@@ -31,8 +31,13 @@ class Plugin {
 
     static function init() {
         add_action('init', function () {
-            require_once __DIR__ . '/vendor/autoload_packages.php';
-            \WP\MCP\Core\McpAdapter::instance();
+            if (!class_exists('\WP\MCP\Core\McpAdapter')) {
+                self::log('Loaded from vendor');
+                require_once __DIR__ . '/vendor/autoload_packages.php';
+                \WP\MCP\Core\McpAdapter::instance();
+            } else {
+                self::log('MCP adapter installed');
+            }
         });
     }
 
@@ -53,7 +58,7 @@ class Plugin {
 
     static function log($text) {
         if (WP_DEBUG) {
-            //error_log('MCPServers > ' . $text);
+            error_log('MCPServers > ' . $text);
         }
     }
 }
@@ -109,7 +114,7 @@ add_action('mcp_adapter_init', function ($adapter) {
                     \WP\MCP\Transport\HttpTransport::class, // Recommended: MCP 2025-06-18 compliant
                 ],
                 \WP\MCP\Infrastructure\ErrorHandling\ErrorLogMcpErrorHandler::class, // Error handler
-                ($settings->debug ?? false) ? McpObservabilityHandler::class : \WP\MCP\Infrastructure\Observability\NullMcpObservabilityHandler::class,
+                ($settings->logging ?? false) ? McpObservabilityHandler::class : \WP\MCP\Infrastructure\Observability\NullMcpObservabilityHandler::class,
                 //WP_DEBUG ? \WP\MCP\Infrastructure\Observability\ErrorLogMcpObservabilityHandler::class : \WP\MCP\Infrastructure\Observability\NullMcpObservabilityHandler::class, // Observability handler
                 $ability_names, // Abilities to expose as tools
                 [], // Resources (optional)

@@ -23,13 +23,13 @@ if ($action) {
     }
 
     if ($action === 'trash') {
-        $wpdb->update($wpdb->prefix . 'mcpservers_servers', ['deleted' => 1], ['id' => $request['id']]);
+        $wpdb->update($wpdb->prefix . 'mcpservers_servers', ['deleted' => 1], ['id' => (int) $request['id']]);
         echo '<script>location.href="?page=mcpservers&subpage=servers-list";</script>';
         return;
     }
 
     if ($action === 'restore') {
-        $wpdb->update($wpdb->prefix . 'mcpservers_servers', ['deleted' => 0], ['id' => $request['id']]);
+        $wpdb->update($wpdb->prefix . 'mcpservers_servers', ['deleted' => 0], ['id' => (int) $request['id']]);
         echo '<script>location.href="?page=mcpservers&subpage=servers-list";</script>';
         return;
     }
@@ -121,17 +121,15 @@ $table->prepare_items();
 
 <?php include __DIR__ . '/../menu.php'; ?>
 <div class="wrap">
-    <div class="satollo-notice satollo-notice-warning">
-        Warning: abilities are provided by third parties and they are responsible for permission check.
-    </div>
+
     <form method="post">
-<?php wp_nonce_field(Admin::$nonce_action); ?>
+        <?php wp_nonce_field(Admin::$nonce_action); ?>
         <input type="hidden" name="action" value="new">
         <p><button class="button button-primary"><?php esc_html_e('Add new', 'satollo-mcpservers') ?></button></p>
     </form>
 
     <form method="post">
-<?php $table->display(); ?>
+        <?php $table->display(); ?>
     </form>
 
     <div class="satollo-notice satollo-notice-warning">

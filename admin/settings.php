@@ -33,6 +33,7 @@ $data = get_option('mcpservers_settings', []);
                     <label>
                         <input type="checkbox" value="1" name="data[logging]" <?php echo isset($data['logging']) ? 'checked' : ''; ?>> Enable
                     </label>
+                    <p class="description">Enable the MCP servers logging</p>
                 </td>
             </tr>
             <tr>
@@ -43,7 +44,7 @@ $data = get_option('mcpservers_settings', []);
                     <label>
                         <input type="checkbox" value="1" name="data[debug]" <?php echo isset($data['debug']) ? 'checked' : ''; ?>> Enable
                     </label>
-                    <p class="description"><?php esc_html_e('Sends MCP server events to error_log', 'satollo-mcpservers'); ?></p>
+                    <p class="description"><?php esc_html_e('Enable general logging and debug mode', 'satollo-mcpservers'); ?></p>
                 </td>
             </tr>
         </table>
@@ -53,6 +54,6 @@ $data = get_option('mcpservers_settings', []);
     </form>
 
     <h3>Debug</h3>
-    <pre><?php //echo esc_html(print_r($data, true)); ?></pre>
+    <pre><?= esc_html(print_r($data, true)); ?></pre>
 
 </div>
