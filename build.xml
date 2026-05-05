@@ -10,6 +10,7 @@
         <echo>Version: ${version}</echo>
     </target>
 
+<!--
     <target name="package" depends="_version">
 
         <echo file="../plugin.json">{ "version": "${version}" }</echo>
@@ -33,8 +34,8 @@
         <delete file="${zipfileversion}"/>
         <copy file="${zipfile}" tofile="${zipfileversion}" />
 
-
     </target>
+-->
 
     <target name="publishwp" depends="_version">
 
@@ -62,32 +63,54 @@
 
         <replaceregexp file="${svndir}/trunk/satollo-mcpservers.php" match="Update URI.*" replace=""/>
 
-        <exec executable="svn" outputProperty="output">
-            <arg value="add"/>
-            <arg value="--force"/>
-            <arg value="${svndir}/trunk/*"/>
+        <!--
+        SVN FUNZIONA SOLO SE NELL'EXEC è SPECIFICATA LA CARTELLA DI LAVORO, NON USARE
+        PERCORSI ASSOLUTI NEGLI ARGOMENTI CHE NON FUNZIONA (forse so il perché ma non lo scrivo)
+        -->
+
+        <echo>SVN Cleanup</echo>
+        <exec executable="svn" dir="${svndir}" outputProperty="output">
+            <arg value="cleanup"/>
         </exec>
         <echo>${output}</echo>
 
-<!--        <exec executable="svn" outputProperty="output">
-            <arg value="cp"/>
-            <arg file="${svndir}/trunk"/>
-            <arg value="${svndir}/tags/${version}"/>
-        </exec>
-        <echo>${output}</echo>-->
 
+        <echo>SVN Add * on trunk</echo>
+        <exec executable="svn" dir="${svndir}/trunk/" outputProperty="output">
+            <arg value="add"/>
+            <arg value="--force"/>
+            <arg value="*"/>
+        </exec>
+        <echo>${output}</echo>
+
+
+        <echo>SVN Create tag</echo>
+        <exec executable="svn" dir="${svndir}" outputProperty="output">
+            <arg value="cp"/>
+            <arg value="trunk"/>
+            <arg value="tags/${version}"/>
+        </exec>
+        <echo>${output}</echo>
+
+
+        <echo>SVN Add * on tag (useful?)</echo>
+        <exec executable="svn" dir="${svndir}/tags/${version}" outputProperty="output">
+            <arg value="add"/>
+            <arg value="--force"/>
+            <arg value="*"/>
+        </exec>
+        <echo>${output}</echo>
+
+
+        <!--
+        VECCHIO METODO, SBAGLIATO
         <copy todir="${svndir}/tags/${version}" >
             <fileset dir="${svndir}/trunk">
                 <include name="**"/>
             </fileset>
         </copy>
+        -->
 
-        <exec executable="svn" outputProperty="output">
-            <arg value="add"/>
-            <arg value="--force"/>
-            <arg value="${svndir}/tags/${version}"/>
-        </exec>
-        <echo>${output}</echo>
     </target>
 
     <!--    <target name="wp">
@@ -116,6 +139,7 @@
 
     </target>-->
 
+<!--
     <target name="publish" depends="package">
         <exec executable="scp" outputProperty="result">
             <arg value="-i"/>
@@ -130,6 +154,7 @@
 
         <echo>${result}</echo>
     </target>
+-->
 
     <target name="update-newsletter">
         <copy todir="../../wordpress-test/wp-content/plugins/${basename}" overwrite="true">

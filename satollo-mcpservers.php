@@ -6,7 +6,7 @@ namespace Satollo\McpServers;
   Plugin Name: Satollo MCP Servers
   Plugin URI: https://www.satollo.net/plugins/mcpservers
   Description: Create MCP servers using the WP abilties
-  Version: 1.0.1
+  Version: 1.0.2
   Requires PHP: 8.1
   Requires at least: 6.9
   Author: Stefano Lissa
