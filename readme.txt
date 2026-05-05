@@ -1,9 +1,9 @@
-=== Satollo MCPServers ===
+=== Satollo MCP Servers ===
 Contributors: satollo
 Tags: ai,mcp
 Requires at least: 6.9
 Tested up to: 6.9
-Stable tag: 1.0.0
+Stable tag: 1.0.1
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -11,50 +11,46 @@ Configure and publish MCP servers to expose abiltities to AI agents
 
 == Description ==
 
-An MCP server exposes "abilities" that can be invoked by AI agents like Claude, Mistral, ChatGPT.
+The MCP Servers plugin enables WordPress to expose "abilities" - standardized functions that AI agents (such as Claude, Mistral, or ChatGPT) can invoke.
 
-Abilities are provided by plugin with a standardized way to describe what they do and which parameters they need. It's a new feature of WordPress (6.9+).
+These abilities allow plugins and themes to describe their functionalities and required parameters in a structured way, facilitating seamless interaction with AI agents via the MCP (Model Context Protocol).
 
-For example a newsletter plugin can expose abilities to manage the subscribers or the newsletters.
 
-A form manager can have abilities to manage forms or work with the collected submissions.
+= Use Cases =
 
-There are no limits and all those abilities can be used by an AI agent via the MCP protocol.
+* A newsletter plugin can expose abilities to manage subscribers or newsletters.
+* A form manager can provide abilities to handle forms or process submissions.
+* No limits: Any functionality can be exposed and utilized by AI agents.
+
 
 = Creating a server =
 
-When you create a server, by default it does not expose any ability. You can choose one or more ability categories.
+Go to the "Servers" page and add a server. By default, a new MCP server does not expose any abilities. You can:
 
-Or, you can even select single abilities.
+* Select one or more ability categories.
+* Choose individual abilities to expose.
 
-Exposing all the abilities makes complicated by the AI agents to select what to invoke or, worse, there could be overlapping functionalities.
+= Best Practices =
 
-Hence, it's a good choice to limit the abilities to the ones you really need when interacting with your agent.
+* Avoid exposing all abilities: This can overwhelm AI agents and lead to overlapping functionalities.
+* Limit abilities to those necessary for your current workflow.
+* Create multiple MCP servers to enable only the tools required for specific tasks on the agent side.
 
-And you can create different MCP servers so you can enable on the agent side only the set of tools you need for your current work.
 
 = Connecting to a server =
 
-There are many way to let the AI agent connect to your MCP server(s). The simplest way is:
+AI agents can connect to your MCP server(s) in several ways. The simplest method is:
 
-* create an administrator user named "mcp" and, in it's editing page, create an application password
-* use "mcp" and the application password to setup the connection from the AI agent using the "Basic" authentication
+* Create an administrator user named "mcp".
+* Generate an application password for this user in the WordPress dashboard.
+* Use Basic Authentication with the mcp username and the application password to set up the connection from the AI agent.
 
-Not all AI agents support the "Basic" authentication, for example Claude needs the oAuth2 authentication method.
+= Note on Authentication =
 
-You can install an oAuth2 plugin, like
+Not all AI agents support Basic Authentication. For example, Claude requires OAuth2.
 
-= Tech details =
+To enable OAuth2, install a compatible plugin (e.g., WP OAuth Server).
 
-The plugin uses the WP MCP adapter library or the MCP Adapter plugin if installed, with priority to the latest one.
-
-Once the Adapter plugin would be officially available, I'll add a dependency and the PHP library removed. authentication).
-
-= Warning =
-
-Abilities are registered an implemented by plugins and themes: check carefully what they do before exposing!
-
-And be aware that permission checks are up to the single ability.
 
 = References  =
 
@@ -66,12 +62,27 @@ And be aware that permission checks are up to the single ability.
 
 The AI Experiments plugin contains the "Ability explorer" a very useful tool.
 
+
+= Tech details =
+
+The plugin uses the WP MCP Adapter library or the MCP Adapter plugin (if installed), with priority given to the latter.
+
+Once the Adapter plugin is officially available, it will be added as a dependency, and the PHP library will be removed.
+
+
+= Warning =
+
+Abilities are registered an implemented by plugins and themes: check carefully what they do before exposing!
+
+And be aware that permission checks are up to the single ability.
+
 == Changelog ==
 
 = 1.0.1 =
 
 * Readme fixes
 * Debug info on the server editing page (with WP_DEBUG enabled)
+* Fixed the category list on database
 
 = 1.0.0 =
 

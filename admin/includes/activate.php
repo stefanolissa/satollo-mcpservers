@@ -27,7 +27,7 @@ class Activate {
             `namespace` varchar(50) NOT NULL DEFAULT '',
             `description` varchar(500) NOT NULL DEFAULT '',
             `categories` varchar(1000) NOT NULL DEFAULT '',
-            `abilities` TEXT NOT NULL DEFAULT '',
+            `abilities` TEXT,
             PRIMARY KEY (`id`)
             ) $charset_collate;";
 

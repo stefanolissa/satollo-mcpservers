@@ -3,10 +3,10 @@
 namespace Satollo\McpServers;
 
 /*
-  Plugin Name: Satollo MCPServers
+  Plugin Name: Satollo MCP Servers
   Plugin URI: https://www.satollo.net/plugins/mcpservers
   Description: Create MCP servers using the WP abilties
-  Version: 1.0.0
+  Version: 1.0.1
   Requires PHP: 8.1
   Requires at least: 6.9
   Author: Stefano Lissa
@@ -23,7 +23,7 @@ defined('ABSPATH') || exit;
 
 class Plugin {
 
-    const VERSION = '1.0.0';
+    const VERSION = '1.0.1';
     const SLUG = 'satollo-mcpservers';
     const PREFIX = 'mcpservers';
 
@@ -133,12 +133,6 @@ add_action('mcp_adapter_init', function ($adapter) {
 
 if (is_admin()) {
     require_once __DIR__ . '/admin/admin.php';
-}
-
-if (is_admin() || defined('DOING_CRON') && DOING_CRON) {
-    if (file_exists(__DIR__ . '/includes/repo.php')) {
-        require_once __DIR__ . '/includes/repo.php';
-    }
 }
 
 // Daily cleanup process
