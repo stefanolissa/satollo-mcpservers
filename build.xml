@@ -4,7 +4,7 @@
     <property name="svndir" value="c:/progetti/plugins/satollo-mcpservers-svn"/>
     <property name="basename" value="satollo-mcpservers"/>
 
-    <target name="_version">
+    <target name="version">
         <loadfile property="plugin" file="${basename}.php"/>
         <propertyregex pattern="Version: ([^\s]+)" match="$1" property="version" subject="${plugin}"/>
         <echo>Version: ${version}</echo>
@@ -37,7 +37,7 @@
     </target>
 -->
 
-    <target name="publishwp" depends="_version">
+    <target name="publishwp" depends="version">
 
         <available file="${svndir}/tags/${version}" type="dir" property="tagexists" />
         <fail if="tagexists" message="Tag already exists, manually delete" />
